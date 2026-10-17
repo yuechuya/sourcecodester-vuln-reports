@@ -1,0 +1,241 @@
+{
+  "src_files_sha256": {
+    "create_admin.php": "7e2bccdbaadc5a1f88d4b62524b8ec131f6167e5a6fd44287e904fbddbf0413a",
+    "delete_student.php": "269a292b454850db09adc6f83352e95774326054cafc517706b7dad080e20f77",
+    "edit_schedule.php": "0094d5986fdacef557f9be51ed9706577a8f57dbf365b4341407b85dc9272b6c",
+    "edit_student.php": "40986fdb71db560308ba9bc18e3af77424ec016164df6f1fa98c47be541804a9",
+    "export_students.php": "ce54501d054b3433cf9c56247d53bd6a1fcb4c056f65f561e9409480a172b7fb",
+    "index.php": "b5bd0afe8da8c73bbedd34b60d4ed6bb22841b25a8be6cbe003f0730a996b55b",
+    "live_feed.php": "00df08abda2c690f70c35f425715dc89f1debabf6f8299d1fc75efa88bbad1fb",
+    "login.php": "12de6ecb515054e605962db0fb7e52a916710d372a6e42cb72f425ce780e0011",
+    "logout.php": "c449f8875c151aa3ba63ca0fd22c5ba84e71315c199a0dad8c54e551b6de923e",
+    "manage_schedule.php": "41c99138983c1ff224770a6e06c958ab09b55ef28cc8942890f6579a78aefd04",
+    "manage_students.php": "2c417c8ed8301134f46feff2f065612caf2301058c578a816db10e92ac16ecd5",
+    "register_student.php": "0165d1213f4773b577afa0fdce6c7ef24835b792ffcaba70c802d036167a60c6",
+    "reset_password.php": "9aa16dd9877a2a2e0de14e7fccaabde1bf8844b5e9cd2be4f211a2c977c3c7d9",
+    "scan_attendance.php": "8b1703adcd758a8298bb0400ba02f5b3c582c711661971080e79424f55d167b7",
+    "student_details.php": "ecb3a47da1fdb6bdd69b36a853aecd3f48b8e1e0fb7015bb1b7b1daa3c6ffbf5",
+    "student_qr_list.php": "4042c8fc2806fd5749fc1b63f0a3bc3b9469e9266cd840d232d35710fcae6f84",
+    "student_signup.php": "9bc0349fa81c13c7f1abaf06e9f25cb24fee0c16c67b532af66cce6b8f4cc63e",
+    "api/attendance_handler.php": "3979ba1c03733d551827079d4308d66ad779f24a45640d327504148f8d31738f",
+    "api/manage_students.php": "69326b9248aa625c27ee16fb3b2f16426401c8df5624c3a32207511b97cbeab5",
+    "includes/ai_engine.php": "58c6ce0d14e10a8979761eb92984c13994069fedf915371b4d81e84d893c7ef3",
+    "includes/attendance_db.sql": "1d5b38a314f555708aea339668a530578dcfb27c2e3c526e9fc5075d34d4ea74",
+    "includes/auth.php": "657b38f40552e9f85cb7cfd4f8d3c76c228478001899553a8a81c8db0bb5be53",
+    "includes/db.php": "8bd32070efedc547f4bf629c94174822b252e407e8893eebd5c54f2743c30a50"
+  },
+  "results": [
+    {
+      "report": "VULN-01-Unauthenticated-Password-Reset.md",
+      "file": "reset_password.php",
+      "lines": [
+        4,
+        9,
+        10,
+        23,
+        24,
+        25,
+        30,
+        31
+      ],
+      "assertion": "POSITIVE line:line exists",
+      "pass": true
+    },
+    {
+      "report": "VULN-02-Unauthenticated-Admin-Creation.md",
+      "file": "create_admin.php",
+      "lines": [
+        4,
+        7,
+        14,
+        15,
+        19,
+        20,
+        21,
+        24
+      ],
+      "assertion": "POSITIVE line:line exists",
+      "pass": true
+    },
+    {
+      "report": "VULN-03-Unauthenticated-Attendance-Write.md",
+      "file": "api/attendance_handler.php",
+      "lines": [
+        4,
+        9,
+        17,
+        110,
+        111
+      ],
+      "assertion": "POSITIVE line:line exists",
+      "pass": true
+    },
+    {
+      "report": "VULN-04-Stored-XSS-Chain.md",
+      "file": "student_signup.php",
+      "lines": [
+        20,
+        21
+      ],
+      "assertion": "POSITIVE line:line exists",
+      "pass": true
+    },
+    {
+      "report": "VULN-04-Stored-XSS-Chain.md",
+      "file": "api/attendance_handler.php",
+      "lines": [
+        26,
+        32
+      ],
+      "assertion": "POSITIVE line:line exists",
+      "pass": true
+    },
+    {
+      "report": "VULN-04-Stored-XSS-Chain.md",
+      "file": "scan_attendance.php",
+      "lines": [
+        172,
+        177,
+        183
+      ],
+      "assertion": "POSITIVE line:line exists",
+      "pass": true
+    },
+    {
+      "report": "VULN-05-CSRF-Student-Deletion.md",
+      "file": "delete_student.php",
+      "lines": [
+        6,
+        16,
+        17
+      ],
+      "assertion": "POSITIVE line:line exists",
+      "pass": true
+    },
+    {
+      "report": "VULN-05-CSRF-Student-Deletion.md",
+      "file": "manage_students.php",
+      "lines": [
+        7,
+        13,
+        120
+      ],
+      "assertion": "POSITIVE line:line exists",
+      "pass": true
+    },
+    {
+      "report": "VULN-06-Session-Fixation.md",
+      "file": "login.php",
+      "lines": [
+        3,
+        17,
+        18,
+        19
+      ],
+      "assertion": "POSITIVE line:line exists",
+      "pass": true
+    },
+    {
+      "report": "VULN-07-Reflected-XSS-ResetPassword.md",
+      "file": "reset_password.php",
+      "lines": [
+        9,
+        25,
+        33,
+        61
+      ],
+      "assertion": "POSITIVE line:line exists",
+      "pass": true
+    },
+    {
+      "report": "VULN-08-Hardcoded-DB-Credentials.md",
+      "file": "includes/db.php",
+      "lines": [
+        4,
+        5,
+        6,
+        13
+      ],
+      "assertion": "POSITIVE line:line exists",
+      "pass": true
+    },
+    {
+      "report": "VULN-01",
+      "file": "reset_password.php",
+      "assertion": "NEGATIVE: no auth gate (no auth.php include)",
+      "regex": "includes/auth\\.php",
+      "matched": false,
+      "pass": true
+    },
+    {
+      "report": "VULN-02",
+      "file": "create_admin.php",
+      "assertion": "NEGATIVE: no auth gate",
+      "regex": "includes/auth\\.php",
+      "matched": false,
+      "pass": true
+    },
+    {
+      "report": "VULN-03",
+      "file": "api/attendance_handler.php",
+      "assertion": "NEGATIVE: API has no auth gate (only db.php included)",
+      "regex": "includes/auth\\.php",
+      "matched": false,
+      "pass": true
+    },
+    {
+      "report": "VULN-04a",
+      "file": "student_signup.php",
+      "assertion": "NEGATIVE: no input validation/sanitisation on full_name",
+      "regex": "preg_match.*full_name",
+      "matched": false,
+      "pass": true
+    },
+    {
+      "report": "VULN-04b",
+      "file": "scan_attendance.php",
+      "assertion": "NEGATIVE: no safe-DOM API in the file (template-literal+innerHTML only)",
+      "regex": "textContent|createElement",
+      "matched": false,
+      "pass": true
+    },
+    {
+      "report": "VULN-05",
+      "file": "delete_student.php",
+      "assertion": "NEGATIVE: no CSRF/origin check",
+      "regex": "csrf|samesite|Origin",
+      "matched": false,
+      "pass": true
+    },
+    {
+      "report": "VULN-06",
+      "file": "login.php",
+      "assertion": "NEGATIVE: no session_regenerate_id call",
+      "regex": "regenerate_id",
+      "matched": false,
+      "pass": true
+    },
+    {
+      "report": "VULN-07",
+      "file": "reset_password.php",
+      "assertion": "NEGATIVE: no htmlspecialchars anywhere in the response path",
+      "regex": "htmlspecialchars",
+      "matched": false,
+      "pass": true
+    },
+    {
+      "report": "VULN-08",
+      "file": "includes/db.php",
+      "assertion": "NEGATIVE: credentials not sourced from env (literal values in source)",
+      "regex": "getenv|\\\\$_ENV|\\\\$_SERVER",
+      "matched": false,
+      "pass": true
+    }
+  ],
+  "summary": {
+    "total": 20,
+    "pass": 20,
+    "fail": 0,
+    "all_pass": true
+  }
+}

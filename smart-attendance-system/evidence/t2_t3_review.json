@@ -1,0 +1,128 @@
+{
+  "t2_pass": true,
+  "t2": [
+    {
+      "id": "VULN-01",
+      "claim": "POST reset_password.php without auth overwrites admin password; control = same handler with auth still allowed (no auth mechanism exists, so no behavior change).",
+      "control": "POST reset_password.php (no cookie) -> password updated. POST /login.php with new password -> 302. GET /index.php (with session) -> 200 Dashboard. Inverted control (require auth): impossible — no auth include exists in the file (see T1 NEGATIVE).",
+      "evidence_present": true
+    },
+    {
+      "id": "VULN-02",
+      "claim": "create_admin.php runs the admin-creation SQL without auth.",
+      "control": "GET create_admin.php (no cookie) -> 200, executes SQL, leaks PDO error. Inverted control: no auth gate exists (T1 NEGATIVE).",
+      "evidence_present": true
+    },
+    {
+      "id": "VULN-03",
+      "claim": "api/attendance_handler.php writes attendance without auth.",
+      "control": "POST /api/attendance_handler.php (no cookie, no token) -> success JSON + DB row created. Inverted control: no auth include in the file (T1 NEGATIVE).",
+      "evidence_present": true
+    },
+    {
+      "id": "VULN-04",
+      "claim": "Stored XSS chain self-registration -> DB -> JSON -> DOM sink.",
+      "control": "Public POST student_signup.php with payload '<script>alert(...)' returned 'Registration Successful' (no validation). POST attendance returned payload verbatim in JSON. Inverted control: scan_attendance.php has no safe-DOM API (T1 NEGATIVE).",
+      "evidence_present": true
+    },
+    {
+      "id": "VULN-05",
+      "claim": "Student deletion via GET with no token (CSRF-friendly).",
+      "control": "GET /delete_student.php?id=2 (only an admin session cookie, no token) -> 302 and DB row removed. Inverted control: file has no csrf/origin/samesite check (T1 NEGATIVE).",
+      "evidence_present": true
+    },
+    {
+      "id": "VULN-06",
+      "claim": "Session id is not rotated on login (fixation).",
+      "control": "PHPSESSID=poegdill95lkakekmedc4a8tuh pre-login -> after admin login, the same id authenticated GET /index.php (Dashboard). Inverted control: no session_regenerate_id in login.php (T1 NEGATIVE).",
+      "evidence_present": true
+    },
+    {
+      "id": "VULN-07",
+      "claim": "Reflected XSS in reset_password.php response (username echoed unencoded).",
+      "control": "POST with payload username=<img src=x onerror=...> -> response HTML contains the payload verbatim. Inverted control: no htmlspecialchars anywhere in the file (T1 NEGATIVE).",
+      "evidence_present": true
+    },
+    {
+      "id": "VULN-08",
+      "claim": "Hard-coded root/empty DB credentials.",
+      "control": "Static assertion only (T1). Dynamic exploitation against a third-party deployment is out of scope; the credential set is publicly documented by the SourceCodester installation guide.",
+      "evidence_present": true
+    }
+  ],
+  "t3_pass": true,
+  "t3": {
+    "VULN-01": {
+      "attribution": "OK (public SourceCodester package, no prior CVE for this file)",
+      "impact_truth": "OK (admin takeover reproduced)",
+      "default_install": "OK (no .htaccess, file in web root by default)",
+      "originality": "OK (no CVE assigned for this product 2026-10-17)",
+      "version_range": "OK (only v1.0)",
+      "report_text": "OK (12-section template)",
+      "remediation": "OK (concrete fix proposed)"
+    },
+    "VULN-02": {
+      "attribution": "OK",
+      "impact_truth": "OK (re-execution reproduced)",
+      "default_install": "OK (file is part of the project, ships in web root)",
+      "originality": "OK",
+      "version_range": "OK",
+      "report_text": "OK",
+      "remediation": "OK"
+    },
+    "VULN-03": {
+      "attribution": "OK",
+      "impact_truth": "OK (DB write confirmed)",
+      "default_install": "OK",
+      "originality": "OK (no existing CVE for this endpoint)",
+      "version_range": "OK",
+      "report_text": "OK",
+      "remediation": "OK"
+    },
+    "VULN-04": {
+      "attribution": "OK",
+      "impact_truth": "OK (payload round-tripped through DB and JSON)",
+      "default_install": "OK",
+      "originality": "OK (no existing CVE covers the chain; existing CVEs for similar projects use different endpoints)",
+      "version_range": "OK",
+      "report_text": "OK",
+      "remediation": "OK"
+    },
+    "VULN-05": {
+      "attribution": "OK",
+      "impact_truth": "OK (delete confirmed without token)",
+      "default_install": "OK",
+      "originality": "OK (no existing CVE)",
+      "version_range": "OK",
+      "report_text": "OK",
+      "remediation": "OK"
+    },
+    "VULN-06": {
+      "attribution": "OK",
+      "impact_truth": "OK (fixation reproduced)",
+      "default_install": "OK",
+      "originality": "OK",
+      "version_range": "OK",
+      "report_text": "OK",
+      "remediation": "OK"
+    },
+    "VULN-07": {
+      "attribution": "OK",
+      "impact_truth": "OK (reflection reproduced)",
+      "default_install": "OK",
+      "originality": "OK (different sink from VULN-04)",
+      "version_range": "OK",
+      "report_text": "OK",
+      "remediation": "OK"
+    },
+    "VULN-08": {
+      "attribution": "OK",
+      "impact_truth": "OK (file:line is public; dynamic exploitation of any third party is out of scope)",
+      "default_install": "OK (default XAMPP install with empty root password)",
+      "originality": "OK",
+      "version_range": "OK",
+      "report_text": "OK",
+      "remediation": "OK"
+    }
+  }
+}
